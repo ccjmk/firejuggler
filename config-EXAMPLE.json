@@ -1,0 +1,20 @@
+{
+    "instances": [
+        {
+            "id": 0,
+            "name": "Instance Example 1",
+            "foundry": {
+                "app": "path/to/FoundryVTT",
+                "data": "path/to/Data"
+            }
+        },
+        {
+            "id": 1,
+            "name": "Instance Example 2",
+            "foundry": {
+                "app": "path/to/FoundryVTT2",
+                "data": "path/to/Data2"
+            }
+        }
+    ]
+}

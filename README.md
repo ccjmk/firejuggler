@@ -1,34 +1,68 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FireJuggler for Foundry VTT
 
-## Getting Started
+FireJuggler is a small web application you can deploy on your Foundry VTT linux server to manage multiple installed fvtt instances: see what installation you are currently running, stop/start and swich between them.
 
-First, run the development server:
+This is a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/) as both a problem-solver for me wanting to be able to manage foundry vtt instances on my EC2 server without actually ssh'ing into to, and as a little test run for the technologies involved.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+* [Setting up FireJuggler](#setting-up-firejuggler)
+* [Configuring your instances](#configuring-your-instances)
+* [Running FireJuggler](#running-firejuggler)
+* [Errors?](#errors)
+* [Windows Support](#does-this-work-on-windows)
+* [Changelog](#changelog)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setting up FireJuggler
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You need to download this project into the server and build + run it with Node.js. As foundry requires node itself, that shouldn't be usually a problem.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.tsx`.
+After downloading it, you can build the project with `npm run build`. That would leave it almost ready to run, needing only some json configuration to find the installed FoundryVTT instances. 
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Configuring your instances
 
-## Learn More
+The project has a file named config-EXAMPLE.json on the root. Copy or rename that file into a file called `config.json` and edit it with whatever text editing tool you prefer. You will need to define an ID and a human-readable name for each instance, and the root path of both foundry's /foundryvtt directory and the data directory.
 
-To learn more about Next.js, take a look at the following resources:
+Just in case, here's an example content you can also copy and edit:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    {
+        "instances": [
+            {
+                "id": 1,
+                "name": "Readable name of instance 1",
+                "foundry": {
+                    "app": "/path/to/instance1/foundryvtt",
+                    "data": "/path/to/instance1/foundrydata"
+                }
+            },
+            {
+                "id": 2,
+                "name": "Readable name of instance 1",
+                "foundry": {
+                    "app": "/path/to/instance2/foundryvtt",
+                    "data": "/path/to/instance2/foundrydata"
+                }
+            }
+        ]
+    }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Running FireJuggler
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+With the project already built and instances configured, run it with `npm run start` (you might want to run that with an '&' at the end to run on background and disown the process from the terminal so you can safely close it without the FireJuggler process dying). **Remember to first setup your instances.**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+By default, the application runs on port 3000. You might want to reverse-proxy into that port using Nginx or Caddy to hide it under a different name. I like having my foundry running on foundry.mydomain.xyz, and this tool on firejuggler.mydomain.xyz, for example.
+
+Open your.server.ip/your.domain.name:3000 with your browser to see the interface.
+
+## Errors ?!
+
+If you encounter any issue, the application tries to log little but meaningful messages as it executes, so be sure to check your server's standard output if you see anything fishy.
+
+I also recommend using absolute paths for the config.json. I would expect relative paths to also work, but absolute paths are clearer imo when you are refering to external paths from a project.
+
+## Does this work on Windows?
+
+No, sorry. If anyone with more windows CLI experience wants to submit a MR to make it work, I'll be glad to check it. I actually tried to make it windows-compatible out of the box but I could't find an eas way of getting the process id of a particular node execusion like I did on linux with the instance's config 'foundry.app' key and pgrep.
+
+## Changelog
+
+* v1.0.0 - First public release.
