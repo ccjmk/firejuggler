@@ -65,4 +65,5 @@ No, sorry. If anyone with more windows CLI experience wants to submit a MR to ma
 
 ## Changelog
 
-* v1.0.0 - First public release.
+- v1.0.0 - First public release.
+- v2.0.0 - [WIP] Added authentication/authorization via  

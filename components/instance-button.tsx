@@ -11,7 +11,7 @@ export default function InstanceButton(props: InstanceButtonProps) {
 
     return (
         <button type="button"
-            className={`border-b p-2 m-4 rounded-md shadow-2xl ${statusColor}`}
+            className={`border-b p-2 rounded-md shadow-2xl ${statusColor}`}
             onClick={handleClick}
             title={actionName}
         >
