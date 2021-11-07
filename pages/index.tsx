@@ -44,7 +44,6 @@ export async function getServerSideProps(ctx: any): Promise<{ props: { instances
   let config: Config = getConfig();
 
   const cookie = cookies(ctx).adminKey;
-  console.log(`Cookie: ${cookie}`)
   if (!cookie) {
     return {
       redirect: {

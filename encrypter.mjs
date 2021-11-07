@@ -4,7 +4,7 @@ import fs from 'fs'
 const args = process.argv.slice(2);
 if (args[0]) {
     const secret = randomBytes(127).toString('hex');
-    const hash = createHmac('sha256', secret)
+    const hmac = createHmac('sha256', secret)
         .update(args[0])
         .digest('hex');
 
@@ -12,7 +12,8 @@ if (args[0]) {
         if (err) return console.log(err);
         console.log('Secret key created!');
     });
-    fs.writeFile('admin.key', hash, function (err) {
+
+    fs.writeFile('admin.key', hmac, function (err) {
         if (err) return console.log(err);
         console.log('Admin key hash saved!');
     });

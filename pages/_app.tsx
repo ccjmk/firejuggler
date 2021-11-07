@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import Head from "next/head";
 import type { AppProps } from 'next/app'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function FireJuggler({ Component, pageProps }: AppProps) {
   return <>
     <Head>
       <meta charSet="utf-8" />
@@ -20,9 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
 
       <footer className="text-center font-semibold align-bottom">
-        Made with <a href="https://nextjs.org/">NextJS</a>, <a href="https://tailwindcss.com/">Tailwind</a> & Love - by ccjmk
+        <p>Made with <a href="https://nextjs.org/">NextJS</a>, <a href="https://tailwindcss.com/">Tailwind</a> & Love - by ccjmk (v{process.env.NEXT_PUBLIC_APP_VERSION})</p>
       </footer>
     </div>
   </>
 }
-export default MyApp
+export default FireJuggler

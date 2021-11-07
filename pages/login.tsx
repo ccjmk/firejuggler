@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Router from 'next/router'
 import Card from '../components/card'
 
 export default function Login(): JSX.Element {
@@ -6,9 +7,11 @@ export default function Login(): JSX.Element {
     const [adminKey, setValue] = useState<string>('');
 
     const handleClick = async () => {
-        console.log("handling click", adminKey)
-        if(await validate(adminKey)) {
-            document.cookie = `adminKey=${adminKey}; path=/`;
+        const keyValidation = await validate(adminKey);
+        setValue('');
+        if (keyValidation.isValid) {
+            document.cookie = `adminKey=${keyValidation.keyHash}; path=/`;
+            Router.push('/');
         } else {
             alert("Invalid key!");
         }
@@ -31,6 +34,9 @@ export default function Login(): JSX.Element {
 }
 
 async function validate(key: string) {
-    const res = await fetch(`/api/validate`, { method: 'POST', body: JSON.stringify({key: key}) })
-    return res.status === 200;
+    const res = await fetch(`/api/validate`, { method: 'POST', body: JSON.stringify({ key: key }) })
+    if (res.status === 200) {
+        return { isValid: true, keyHash: await res.json() }
+    }
+    return { isValid: false }
 }
