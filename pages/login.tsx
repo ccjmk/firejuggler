@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import Card from '../components/card'
 
 export default function Login(): JSX.Element {
 
     const [adminKey, setValue] = useState<string>('');
+    const router = useRouter();
 
     const handleClick = async () => {
         const keyValidation = await validate(adminKey);
         setValue('');
         if (keyValidation.isValid) {
             document.cookie = `adminKey=${keyValidation.keyHash}; path=/`;
-            Router.push('/');
+            router.push('/index');
         } else {
-            alert("Invalid key!");
+            alert("Invalid admin password!");
         }
     }
 
@@ -24,10 +25,10 @@ export default function Login(): JSX.Element {
             </p>
 
             <Card>
-                <div className="flex">
+                <form className="flex" onSubmit={handleClick}>
                     <input className="text-black flex-grow border rounded  border-gray-400 p-1.5" type="password" value={adminKey} onChange={(e) => setValue(e.target.value)} />
-                    <button className="px-10 flex-grow-0 border-2 rounded border-yellow-500 font-semibold p-1.5 ml-4 text-white bg-yellow-500" type="button" onClick={handleClick}>Login</button>
-                </div>
+                    <button className="px-10 flex-grow-0 border-2 rounded border-yellow-500 font-semibold p-1.5 ml-4 text-white bg-yellow-500" type="submit">Login</button>
+                </form>
             </Card>
         </main>
     )
