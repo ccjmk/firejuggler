@@ -22,7 +22,7 @@ export default async function handler(
 
   if (hmac === adminKey) {
     console.log("Successful login at " + now);
-    return res.status(200).json({ key: hmac });
+    return res.status(200).json('{}');
   } else {
     console.log("Invalid login attempt at " + now);
     return res.status(403).send('auth forbidden');
