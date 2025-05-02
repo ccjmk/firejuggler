@@ -18,5 +18,5 @@ if (args[0]) {
         console.log('Admin key hash saved!');
     });
 } else {
-    console.error(`Called without parameters for hashing - please try again with a password to encrypt like 'node ${process.argv[1]} mySecretPassword'`);
+    console.error(`Called without parameters for hashing - please try again with a password to encrypt like 'node encrypter.mjs mySecretPassword'`);
 }
