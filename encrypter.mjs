@@ -1,22 +1,28 @@
-import { createHmac, randomBytes } from 'crypto';
-import fs from 'fs'
+import { createHmac, randomBytes } from "crypto";
+import fs from "fs";
 
 const args = process.argv.slice(2);
-if (args[0]) {
-    const secret = randomBytes(127).toString('hex');
-    const hmac = createHmac('sha256', secret)
-        .update(args[0])
-        .digest('hex');
-
-    fs.writeFile('secret.key', secret, function (err) {
-        if (err) return console.log(err);
-        console.log('Secret key created!');
-    });
-
-    fs.writeFile('admin.key', hmac, function (err) {
-        if (err) return console.log(err);
-        console.log('Admin key hash saved!');
-    });
+const argPassword = args[0];
+if (!argPassword) {
+  console.error(
+    `\nCalled without parameters for hashing
+Please try again with a password argument like: 'node encrypter.mjs mySecretPassword'`
+  );
 } else {
-    console.error(`Called without parameters for hashing - please try again with a password to encrypt like 'node encrypter.mjs mySecretPassword'`);
+  _encryptPassword(argPassword);
+}
+
+function _encryptPassword(argPassword) {
+  const secret = randomBytes(127).toString("hex");
+  const hmac = createHmac("sha256", secret).update(argPassword).digest("hex");
+
+  fs.writeFile("secret.key", secret, function (err) {
+    if (err) return console.log(err);
+    console.log("Secret key created!");
+  });
+
+  fs.writeFile("admin.key", hmac, function (err) {
+    if (err) return console.log(err);
+    console.log("Admin key hash saved!");
+  });
 }

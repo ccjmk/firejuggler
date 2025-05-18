@@ -1,7 +1,7 @@
 // Created by Landan Lloyd from the Noun Project
 import * as React from "react"
 
-const Logout = () => {
+export default function Logout() {
     return (
         <svg
             width="2.25rem"
@@ -19,4 +19,3 @@ const Logout = () => {
         </svg>
     )
 }
-export default Logout;
