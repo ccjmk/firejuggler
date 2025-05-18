@@ -10,11 +10,11 @@ import { ReactElement } from 'react';
 import cookies from 'next-cookies';
 
 export default function Home({ instances }: { instances: Instance[] }): JSX.Element {
-  const instanceList: ReactElement[] = [];
+  const instanceButtons: ReactElement[] = [];
   const running = instances.find(i => i.status == InstanceStatus.RUNNING);
 
   instances.forEach((instance: Instance, index: number) => {
-    instanceList.push(
+    instanceButtons.push(
       <InstanceButton
         key={index}
         instance={instance}
@@ -28,7 +28,7 @@ export default function Home({ instances }: { instances: Instance[] }): JSX.Elem
       <ServerStatus currentInstance={running} />
 
       <Card>
-        {instanceList}
+        {instanceButtons}
       </Card>
     </main>
   )

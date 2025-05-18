@@ -18,9 +18,7 @@ function FireJuggler({ Component, pageProps }: AppProps) {
         <h1 className="text-4xl font-bold">
           FireJuggler for Foundry VTT
         </h1>
-        {isNotLoginPath && <button onClick={logout}>
-          <Logout />
-        </button>}
+        {isNotLoginPath && <Logout />}
       </div>
 
 
