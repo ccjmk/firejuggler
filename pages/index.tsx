@@ -1,20 +1,19 @@
+import Head from 'next/head'
 import InstanceButton from '../components/instance-button'
 import ServerStatus from '../components/server-status'
-import Card from '../components/card'
 import Instance from '../domain/Instance';
 import InstanceStatus from '../domain/InstanceStatus';
 
 import { getConfig, getFoundryPid } from '../common/instanceHandling';
 import Config from '../domain/Config';
 import { ReactElement } from 'react';
-import cookies from 'next-cookies';
 
 export default function Home({ instances }: { instances: Instance[] }): JSX.Element {
-  const instanceButtons: ReactElement[] = [];
+  const instanceList: ReactElement[] = [];
   const running = instances.find(i => i.status == InstanceStatus.RUNNING);
 
   instances.forEach((instance: Instance, index: number) => {
-    instanceButtons.push(
+    instanceList.push(
       <InstanceButton
         key={index}
         instance={instance}
@@ -24,13 +23,31 @@ export default function Home({ instances }: { instances: Instance[] }): JSX.Elem
   })
 
   return (
-    <main className="align-middle">
-      <ServerStatus currentInstance={running} />
+    <div className="flex flex-col bg-indigo-900 p-4 text-white h-screen justify-between">
+      <Head>
+        <title>FireJuggler</title>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+      </Head>
 
-      <Card>
-        {instanceButtons}
-      </Card>
-    </main>
+      <h1 className="p-4 m-4 text-4xl font-bold">
+        FireJuggler for Foundry VTT
+      </h1>
+
+      <main className="align-middle">
+        <div>
+          <ServerStatus currentInstance={running} />
+        </div>
+
+        <div className="bg-gray-50 border-b p-auto m-auto rounded-lg w-2/5 ">
+          {instanceList}
+        </div>
+      </main>
+
+      <footer className="text-center font-semibold align-bottom">
+        Made with <a href="https://nextjs.org/">NextJS</a>, <a href="https://tailwindcss.com/">Tailwind</a> & Love - by ccjmk
+      </footer>
+    </div>
   )
 }
 
@@ -39,20 +56,9 @@ async function handleInstanceToggle(instanceId: string) {
   document.location.reload()
 }
 
-export async function getServerSideProps(ctx: any): Promise<{ props: { instances: Instance[] } } | { redirect: any }> {
+export async function getServerSideProps(): Promise<{ props: { instances: Instance[] } }> {
   const fs = require('fs');
   let config: Config = getConfig();
-
-  const cookie = cookies(ctx).adminKey;
-  if (!cookie) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
 
   const instances: Instance[] = config.instances.map(i => {
     let version;
