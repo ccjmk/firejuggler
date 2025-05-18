@@ -35,3 +35,7 @@ yarn-error.log*
 
 # project locals
 config.json
+
+# admin key hash file handling
+admin.key
+secret.key

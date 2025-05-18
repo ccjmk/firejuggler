@@ -10,17 +10,23 @@ function stopInstance(instancePid: number) {
 
 function startInstance(instance: InstanceConfig): number {
   console.info(`Starting instance ${instance.name} (id: ${instance.id})`);
-  const fvtt = spawn(
-    "node",
-    [
-      `${instance.foundry.app}/resources/app/main.js`,
-      `--dataPath=${instance.foundry.data}`,
-    ],
-    {
-      detached: true,
-    }
-  );
-  return fvtt.id;
+  try {
+    const fvtt = spawn(
+      "node",
+      [
+        `${instance.foundry.app}/resources/app/main.js`,
+        `--dataPath=${instance.foundry.data}`,
+      ],
+      {
+        detached: true,
+      }
+    );
+    return fvtt.id;
+  } catch (error) {
+    throw new Error(
+      `Error starting instance ${instance.name} (id: ${instance.id}): ` + error
+    );
+  }
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -37,8 +43,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
   }
 
-  const toToggle = instances.find((i) => i.id == instanceId);
-  if (!toToggle) {
+  const instanceToToggle = instances.find((i) => i.id == instanceId);
+  if (!instanceToToggle) {
     const message = `Unable to find instance with id [${instanceId}] for operation`;
     console.error(message);
     return res.status(403).json({ message: message });
@@ -51,8 +57,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     stopInstance(runningInstance.pid);
   }
 
-  if (toToggle !== runningInstance?.instance) {
-    startInstance(toToggle);
+  if (instanceToToggle !== runningInstance?.instance) {
+    const pid = startInstance(instanceToToggle);
+    console.info(
+      `Started instance [${instanceToToggle.name}] with pid [${pid}] and id [${instanceId}]`
+    );
   }
 
   return res.status(200).json({ queryId: instanceId });
